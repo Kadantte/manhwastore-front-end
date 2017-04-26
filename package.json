@@ -6,11 +6,14 @@
   "author": "Gabriel Lima <gabriel.wprog@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "c9-start": "webpack-dev-server  --host $IP --port $PORT  --hot --inline",
+    "server:start": "node server"
   },
   "dependencies": {
     "bulma": "^0.4.1",
     "html-webpack-plugin": "^2.28.0",
+    "morgan": "^1.8.1",
     "path": "^0.12.7",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

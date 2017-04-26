@@ -8,17 +8,14 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 });
 
 module.exports = {
-  entry: {
-    js: './src/index.js',
-    css: './src/css/app.css'
-  },
+  entry: './src/index.js',
   output: {
     path: path.resolve('dist'),
     filename: 'bundle.js'
   },
   module: {
     loaders: [
-      { test: /\.css$/, loader: "style-loader!css-loader"  },
+      { test: /\.css$/, loader: 'style-loader!css-loader'  },
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
       { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
     ]
