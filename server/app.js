@@ -1,14 +1,35 @@
 const express = require('express');
-const morgan  = require('morgan');
 const path    = require('path');
+const httpProxy = require('http-proxy');
 
+const proxy = httpProxy.createProxyServer();
 const app = express();
 
-app.use(morgan(':remote-addr - :remote-user [:date[ctf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
-app.use(express.static(path.resolve(__dirname, '..', 'public')));
-app.get('/*', (req, res) => {
-    console.log(req);
-    res.sendFile(path.resolve(__dirname, '..', 'public', 'index.html'));
+const isProduction = process.env.NODE_ENV === 'production';
+const port = process.env.PORT ? process.env.PORT : 3000;
+const publicPath = path.resolve(__dirname,'..', 'public');
+const pathToIndex = path.resolve(__dirname, '..', 'public', 'index.html');
+
+app.use(express.static(publicPath));
+
+if(!isProduction) {
+  const bundle = require('./bundle.js');
+  bundle();
+
+  app.all('/dist/*', (req, res) => {
+    proxy.web(req, res, {
+      target: 'http://0.0.0.0:8080'
+    })
+  });
+}
+
+proxy.on('error', (e) => {
+  console.log(e);
+})
+
+app.get('*', (req, res) => {
+    res.sendFile(pathToIndex);
 });
+
 
 module.exports = app;
