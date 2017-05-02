@@ -27,7 +27,7 @@ proxy.on('error', (e) => {
   console.log(e);
 })
 
-app.get('*', (req, res) => {
+app.get(/^\/(?!api).*$/, (req, res) => {
     res.sendFile(pathToIndex);
 });
 
