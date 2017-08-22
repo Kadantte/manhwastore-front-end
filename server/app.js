@@ -14,12 +14,19 @@ app.use(express.static(publicPath));
 
 if(!isProduction) {
   const bundle = require('./bundle.js');
+  const webpackDevUrl = 'http://0.0.0.0:8080';
   bundle();
 
   app.all('/dist/*', (req, res) => {
     proxy.web(req, res, {
-      target: 'http://0.0.0.0:8080'
-    })
+      target: webpackDevUrl
+    });
+  });
+
+  app.all('/*hot-update.json', (req, res) => {
+    proxy.web(req, res, {
+      target: webpackDevUrl
+    });
   });
 }
 
@@ -30,6 +37,5 @@ proxy.on('error', (e) => {
 app.get(/^\/(?!api).*$/, (req, res) => {
     res.sendFile(pathToIndex);
 });
-
 
 module.exports = app;
